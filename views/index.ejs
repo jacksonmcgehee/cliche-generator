@@ -1,0 +1,98 @@
+<html>
+<head>
+  <title>Flapper News</title>
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
+  <script src="/javascripts/angularApp.js"></script>
+  <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+  <style> .glyphicon-thumbs-down { cursor:pointer } </style>
+</head>
+<body ng-app="flapperNews" ng-controller="MainCtrl">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <ui-view ></ui-view>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="/home.html" >
+        <div class="page-header">
+            <h1>Business Cliches</h1>
+        </div>
+
+        <div ng-repeat="post in posts | orderBy:'-upvotes'">
+            <img width="200" src={{post.photo_url}} />
+            <span style="font-size:20px; margin-left:10px;">
+                <a ng-show="post.link" href="{{post.link}}">
+                {{post.cliche}}
+                </a>
+                <span ng-hide="post.link">
+                {{post.cliche}}
+                </span>
+                <span>
+                    <a href="#/posts/{{$index}}">Comments</a>
+                </span>
+            </span>
+            <span class="glyphicon glyphicon-thumbs-up"
+                ng-click="incrementUpvotes(post)"></span>
+            <span class="glyphicon glyphicon-thumbs-down"
+                ng-click="incrementUpvotes(post)"></span>
+            {{post.votes}}
+            
+        </div>
+
+        <form ng-submit="addPost()"
+            style="margin-top:30px;">
+            <h3>Add a new cliche</h3>
+
+            <div class="form-group">
+                <input type="text"
+                class="form-control"
+                placeholder="Cliche"
+                ng-model="cliche"></input>
+            </div>
+            <div class="form-group">
+                <input type="text"
+                class="form-control"
+                placeholder="Photo URL"
+                ng-model="photo_url"></input>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </script>
+    <script type="text/ng-template" id="/posts.html">
+        <div class="page-header">
+            <h3>
+            <a ng-show="post.link" href="{{post.link}}">
+                {{post.cliche}}
+            </a>
+            <span ng-hide="post.link">
+                <img src={{post.photo_url}} />
+            </span>
+            </h3>
+        </div>
+        
+        <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+            <span class="glyphicon glyphicon-thumbs-up"
+            ng-click="incrementUpvotes(comment)"></span>
+            {{response.votes}} - by {{response.author}}
+            <span style="font-size:20px; margin-left:10px;">
+            {{response.body}}
+            </span>
+        </div>
+        <form ng-submit="addComment()"
+            style="margin-top:30px;">
+            <h3>Add a new comment</h3>
+
+            <div class="form-group">
+            <input type="text"
+            class="form-control"
+            placeholder="Comment"
+            ng-model="body"></input>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </script>
+</body>
+</html>
